@@ -4,18 +4,15 @@ import { Box, Flex } from '@chakra-ui/react';
 import React from 'react';
 import { AxisOptions, Chart as ReactChart } from 'react-charts';
 import { ukCovidApiUrl } from '../../../utils/config';
+import { CumCasesBySpecimenDate } from '../types/CumCasesBySpecimenDate';
 
 interface ChartProps {
   region: string | undefined;
 }
 
-interface CumCasesBySpecimenDate {
-  date: string;
-  cumCases: number;
-}
 export const Chart = ({ region }: ChartProps) => {
   const { data, error, isLoading } = useSWR<{
-    data: CumCasesBySpecimenDate[];
+    data: { date: string; cumCases: number }[];
   }>(
     region
       ? `${ukCovidApiUrl}v1/data?filters=areaType=region;areaName=${region}&structure={"date":"date","cumCases":"cumCasesBySpecimenDate"}`
@@ -39,7 +36,7 @@ export const Chart = ({ region }: ChartProps) => {
     []
   );
 
-  const series: any[] = [
+  const series = [
     {
       label: 'Cumulative Covid Cases',
       data:
